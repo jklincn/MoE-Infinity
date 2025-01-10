@@ -1,6 +1,5 @@
-import torch
 import os
-from transformers import AutoTokenizer, SwitchTransformersForConditionalGeneration
+from transformers import AutoTokenizer
 from moe_infinity import MoE
 
 user_home = os.path.expanduser('~')
@@ -10,7 +9,7 @@ tokenizer = AutoTokenizer.from_pretrained(checkpoint)
 
 config = {
     "offload_path": os.path.join(user_home, "moe-infinity"),
-    "device_memory_ratio": 0.75, # 75% of the device memory is used for caching, change the value according to your device memory size on OOM
+    "device_memory_ratio": 0.5, # 50% of the device memory is used for caching, change the value according to your device memory size on OOM
 }
 
 model = MoE(checkpoint, config)

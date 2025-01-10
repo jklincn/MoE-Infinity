@@ -1,3 +1,15 @@
+# 复现步骤
+
+```
+git clone https://github.com/jklincn/MoE-Infinity.git
+cd MoE-Infinity
+conda env create --file environment.yml
+conda activate moe-infinity
+pip install -r requirements.txt
+pip install .
+python examples/readme_example.py
+```
+
 # MoE-Infinity
 
 MoE-Infinity is a cost-effective, fast, and easy-to-use library for Mixture-of-Experts (MoE) inference and serving.
@@ -18,43 +30,46 @@ MoE-Infinity is easy-to-use:
 Note that: The open-sourced MoE-Infinity has been redesigned for making it HuggingFace-users friendly. This version is different from the version reported in the paper, which takes extreme performance as the top priority. As a result, distributed inference is currently not supported in this open-sourced version.
 
 ## Contents
-- [Performance](#performance)
-- [Installation](#installation)
-    - [Prerequisites](#prerequisites)
+
+- [复现步骤](#复现步骤)
+- [MoE-Infinity](#moe-infinity)
+  - [Contents](#contents)
+  - [Performance](#performance)
+  - [Installation](#installation)
     - [Install from conda environment](#install-from-conda-environment)
     - [Install from PyPI](#install-from-pypi)
     - [Install from Source](#install-from-source)
     - [Enable FlashAttention (Optional)](#enable-flashattention-optional)
-- [Usage and Examples](#usage-and-examples)
+  - [Usage and Examples](#usage-and-examples)
     - [Sample Code of Huggingface LLM Inference](#sample-code-of-huggingface-llm-inference)
     - [Running Inference](#running-inference)
-- [Release Plan](#release-plan)
-- [Citation](#citation)
+  - [Release Plan](#release-plan)
+  - [Citation](#citation)
 
 ## Performance
 
 Single GPU A5000 (24GB Memory), per-token-latency (seconds) for generation with a mixed dataset that includes [FLAN](https://huggingface.co/datasets/Muennighoff/flan), [BIG-Bench](https://huggingface.co/datasets/bigbench) and [MMLU](https://huggingface.co/datasets/lukaemon/mmlu) datasets.
 Lower per-token-latency is preferable.
 
-|  | switch-large-128 | NLLB-MoE-54B | Mixtral-7x8b |
-| :---: | :---: | :---: | :---: |
-| <ins>MoE-Infinity</ins> | <ins>*0.230*</ins>	| <ins>*0.239*</ins> | <ins>*0.895*</ins> |
-| Accelerate | 1.043 | 3.071 | 6.633 |
-|DeepSpeed | 4.578 | 8.381 | 2.486 |
-|Mixtral Offloading| X | X | 1.752 | 
-|Ollama | X | X | 0.903 |
+|                         |  switch-large-128  |    NLLB-MoE-54B    |    Mixtral-7x8b    |
+| :---------------------: | :----------------: | :----------------: | :----------------: |
+| <ins>MoE-Infinity</ins> | <ins>*0.230*</ins> | <ins>*0.239*</ins> | <ins>*0.895*</ins> |
+|       Accelerate        |       1.043        |       3.071        |       6.633        |
+|        DeepSpeed        |       4.578        |       8.381        |       2.486        |
+|   Mixtral Offloading    |         X          |         X          |       1.752        |
+|         Ollama          |         X          |         X          |       0.903        |
 
 
 Single GPU A5000, throughput (token/s) for generation with batch size 32.
 Higher throughput is preferable.
 
-|  | switch-large-128 | NLLB-MoE-54B | Mixtral-7x8b |
-| :---: | :---: | :---: | :---: |
-| <ins>MoE-Infinity</ins> | <ins>*69.105*</ins>	| <ins>*30.300*</ins> | <ins>*12.579*</ins> |
-| Accelerate | 5.788 | 4.344 | 1.245 |
-|DeepSpeed | 7.416 | 4.334 | 7.727 |
-|Mixtral Offloading| X | X | 7.684 | 
-|Ollama | X | X | 1.107 |
+|                         |  switch-large-128   |    NLLB-MoE-54B     |    Mixtral-7x8b     |
+| :---------------------: | :-----------------: | :-----------------: | :-----------------: |
+| <ins>MoE-Infinity</ins> | <ins>*69.105*</ins> | <ins>*30.300*</ins> | <ins>*12.579*</ins> |
+|       Accelerate        |        5.788        |        4.344        |        1.245        |
+|        DeepSpeed        |        7.416        |        4.334        |        7.727        |
+|   Mixtral Offloading    |          X          |          X          |        7.684        |
+|         Ollama          |          X          |          X          |        1.107        |
 
 > The Mixtral Offloading experiment was carried out with a batch size of 16, as utilizing a batch size of 32 would result in Out of Memory errors on the GPU.
 
@@ -89,9 +104,11 @@ pip install -e .
 ### Enable FlashAttention (Optional)
 
 Install FlashAttention (>=2.5.2) for faster inference with the following command.
+
 ```bash
 FLASH_ATTENTION_FORCE_BUILD=TRUE pip install flash-attn
 ```
+
 Post-installation, MoE-Infinity will automatically integrate with FlashAttention to enhance performance.
 
 ## Usage and Examples
@@ -130,6 +147,7 @@ print(output_text)
 ### Running Inference
 
 This command runs the script on selected GPUs.
+
 ```bash
 CUDA_VISIBLE_DEVICES=0,1 python script.py
 ```
@@ -151,6 +169,7 @@ We plan to release two functions in the following months:
 ## Citation
 
 If you use MoE-Inifity for your research, please cite our [paper](https://arxiv.org/abs/2401.14361):
+
 ```bibtex
 @inproceedings{moe-infinity2024,
   title={MoE-Infinity: Activation-Aware Expert Offloading for Efficient MoE Serving},
